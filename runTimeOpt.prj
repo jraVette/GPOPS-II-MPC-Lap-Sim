@@ -1,0 +1,288 @@
+<deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
+  <configuration build-checksum="3014438152" file="/scratch2/jra3/REV30_GA_Hockenheim/compilingGeneralLapSim/runTimeOpt.prj" location="/scratch2/jra3/REV30_GA_Hockenheim/compilingGeneralLapSim" name="runTimeOpt" preferred-package-location="/scratch2/jra3/REV30_GA_Hockenheim/compilingGeneralLapSim/runTimeOpt/for_redistribution" preferred-package-type="package.type.install" target="target.ezdeploy.standalone" target-name="MATLAB Compiler for Standalone Applications">
+    <param.appname>runTimeOpt</param.appname>
+    <param.icon />
+    <param.icons />
+    <param.version>1.0</param.version>
+    <param.authnamewatermark />
+    <param.email />
+    <param.company />
+    <param.summary />
+    <param.description />
+    <param.screenshot />
+    <param.guid />
+    <param.installpath.string>/runTimeOpt/</param.installpath.string>
+    <param.installpath.combo>option.installpath.user</param.installpath.combo>
+    <param.logo />
+    <param.install.notes>On the target computer, append the following to your LD_LIBRARY_PATH environment variable (Where {MCR_ROOT} is the directory the MCR has been installed into):&lt;br&gt; {MCR_ROOT}/runtime/glnxa64&lt;br&gt; {MCR_ROOT}/bin/glnxa64&lt;br&gt; {MCR_ROOT}/sys/os/glnxa64&lt;br&gt; {MCR_ROOT}/sys/java/jre/glnxa64/jre/lib/amd64/native_threads&lt;br&gt; {MCR_ROOT}/sys/java/jre/glnxa64/jre/lib/amd64/server&lt;br&gt; {MCR_ROOT}/sys/java/jre/glnxa64/jre/lib/amd64&lt;br&gt;</param.install.notes>
+    <param.intermediate>${PROJECT_ROOT}/runTimeOpt/for_testing</param.intermediate>
+    <param.output>${PROJECT_ROOT}/runTimeOpt/for_redistribution</param.output>
+    <param.user.defined.mcr.options>-R -singleCompThread</param.user.defined.mcr.options>
+    <param.embed.ctf>false</param.embed.ctf>
+    <param.server.ctf>${PROJECT_ROOT}/runTimeOpt/for_testing/.ctf</param.server.ctf>
+    <param.server.readme>${PROJECT_ROOT}/runTimeOpt/for_testing/readme.txt</param.server.readme>
+    <param.target.type>subtarget.standalone</param.target.type>
+    <param.support.packages />
+    <param.web.mcr>true</param.web.mcr>
+    <param.package.mcr>false</param.package.mcr>
+    <param.no.mcr>false</param.no.mcr>
+    <param.web.mcr.name>MyAppInstaller_web</param.web.mcr.name>
+    <param.package.mcr.name>MyAppInstaller_mcr</param.package.mcr.name>
+    <param.no.mcr.name>MyAppInstaller_app</param.no.mcr.name>
+    <param.windows.command.prompt>true</param.windows.command.prompt>
+    <param.create.log>false</param.create.log>
+    <param.log.file />
+    <unset>
+      <param.icon />
+      <param.icons />
+      <param.version />
+      <param.authnamewatermark />
+      <param.email />
+      <param.company />
+      <param.summary />
+      <param.description />
+      <param.screenshot />
+      <param.guid />
+      <param.installpath.string />
+      <param.installpath.combo />
+      <param.logo />
+      <param.install.notes />
+      <param.intermediate />
+      <param.output />
+      <param.server.ctf />
+      <param.server.readme />
+      <param.target.type />
+      <param.support.packages />
+      <param.web.mcr />
+      <param.package.mcr />
+      <param.no.mcr />
+      <param.web.mcr.name />
+      <param.package.mcr.name />
+      <param.no.mcr.name />
+      <param.windows.command.prompt />
+      <param.create.log />
+      <param.log.file />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}/runTimeOpt.m</file>
+    </fileset.main>
+    <fileset.resources>
+      <file>${PROJECT_ROOT}/doubleTrackMatlabODE.m</file>
+      <file>${PROJECT_ROOT}/folderedRun.m</file>
+      <file>${PROJECT_ROOT}/fourwheelContinuous.m</file>
+      <file>${PROJECT_ROOT}/fourwheelContinuousADiGatorGrd.m</file>
+      <file>${PROJECT_ROOT}/fourwheelContinuousADiGatorGrd.mat</file>
+      <file>${PROJECT_ROOT}/fourwheelContinuousADiGatorHes.m</file>
+      <file>${PROJECT_ROOT}/fourwheelContinuousADiGatorHes.mat</file>
+      <file>${PROJECT_ROOT}/fourwheelEndpoint.m</file>
+      <file>${PROJECT_ROOT}/fourwheelEndpointADiGatorGrd.m</file>
+      <file>${PROJECT_ROOT}/fourwheelEndpointADiGatorGrd.mat</file>
+      <file>${PROJECT_ROOT}/fourwheelEndpointADiGatorHes.m</file>
+      <file>${PROJECT_ROOT}/fourwheelEndpointADiGatorHes.mat</file>
+      <file>${PROJECT_ROOT}/genStats.m</file>
+      <file>${PROJECT_ROOT}/generateInitialDaq.m</file>
+      <file>${PROJECT_ROOT}/gpopsMPC_withSwitchingAndAD.m</file>
+      <file>${PROJECT_ROOT}/guessDaqFile.mat</file>
+      <file>${PROJECT_ROOT}/license.m</file>
+      <file>${PROJECT_ROOT}/mathChannelCalculateAlgebraicStates.m</file>
+      <file>${PROJECT_ROOT}/matlabComponents/Hockenheim.mat</file>
+      <file>${PROJECT_ROOT}/matlabComponents/LimebeerF1Car.mat</file>
+      <file>${PROJECT_ROOT}/matlabComponents/Nurburgring.mat</file>
+      <file>${PROJECT_ROOT}/matlabComponents/PathInfoChicane.mat</file>
+      <file>${PROJECT_ROOT}/matlabComponents/PathInfoChicane2LoopsAndFrontStraight.mat</file>
+      <file>${PROJECT_ROOT}/matlabComponents/PathInfoChicaneStraightsBeforeAndAfter.mat</file>
+      <file>${PROJECT_ROOT}/matlabComponents/PathInfoChicaneWithStraights.mat</file>
+      <file>${PROJECT_ROOT}/matlabComponents/dragStrip.mat</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpops2.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpops2License.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsAdigatorContGrd.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsAdigatorContGrdLoc.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsAdigatorContHes.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsAdigatorContHesLoc.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsAdigatorEndpGrd.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsAdigatorEndpGrdLoc.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsAdigatorEndpHes.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsAdigatorEndpHesLoc.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsAdigatorGenFiles.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsBoundsRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsBoundsRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsConRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsConRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsContEndpInputRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsContEndpInputRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsContFirstBD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsContFirstCD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsContFirstFD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsContHesMap.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsContInputRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsContInputRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsContSecondBD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsContSecondCD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsContSecondFD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsDefaults.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsDependADiGator.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsDependAnalytic.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsDependFull.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsDependSecondFromFirst.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsDependSparse.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsDependSparseNaN.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsDependencies.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsEndpFirstBD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsEndpFirstCD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsEndpFirstFD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsEndpInputRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsEndpInputRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsEndpSecondBD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsEndpSecondCD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsEndpSecondFD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsEvalContInternal.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsEventFirstBD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsEventFirstCD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsEventFirstFD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsGrdJacPatRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsGrdJacPatRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsGrdJacnzRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsGrdJacnzRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsGrdPatRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsGrdPatRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsGrdnzRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsGrdnzRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsGuessRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsGuessRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsHesPatRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsHesPatRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsHesnzRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsHesnzRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsInputInterpGuessInternal.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsInterpResult.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptConRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptConRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptConScaledRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptConScaledRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptGrdJacSparsityRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptGrdJacSparsityRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptGrdRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptGrdRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptGrdScaledRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptGrdScaledRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptHandlerRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptHandlerRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptHesPatRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptHesPatRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptHesRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptHesRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptHesScaledRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptHesScaledRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptHesSparsityRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptHesSparsityRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptJacPatRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptJacPatRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptJacRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptJacRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptJacScaledRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptJacScaledRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptObjRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptObjRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptObjScaledRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsIpoptObjScaledRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsJacLinearRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsJacNonlinPatRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsJacPatRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsJacnzRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsJacnzRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsLagrangeCurvature.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsLagrangeInterp.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsMeshAnalysis_hpDR.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsMeshAnalysis_hpLR.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsMeshAnalysis_hpLR_L.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsMeshAnalysis_hpPR.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsMeshShell.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsMultipliersRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsMultipliersRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsObjConRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsObjConRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsObjFirstBD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsObjFirstCD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsObjFirstFD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsObjRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsObjRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsPointsWeightsRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsPointsWeightsRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsRandom.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsRandomGrd.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsRandomHes.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsRemoveZeros1.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsRemoveZeros2.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsScaleRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsScaleRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsScalesFromBounds.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsScalesFromGuess.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsSnoptFunJacRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsSnoptFunJacRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsSnoptFunJacScaledRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsSnoptFunJacScaledRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsSnoptHandlerRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsSnoptHandlerRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsSnoptSparsityRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsSnoptSparsityRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsSolutionRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsSolutionRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsSolveRPMD.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsSolveRPMI.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/gpopsVerifySetup.p</file>
+      <file>${PROJECT_ROOT}/matlabComponents/ipopt.mexa64</file>
+      <file>${PROJECT_ROOT}/matlabComponents/setDefaultsForVarargin.m</file>
+      <file>${PROJECT_ROOT}/plotSimplifiedPacejka.m</file>
+      <file>${PROJECT_ROOT}/runDoubleTrackMatlabOde.m</file>
+      <file>${PROJECT_ROOT}/shortsegmentGPOPS.m</file>
+      <file>${PROJECT_ROOT}/simplifiedPacejka.m</file>
+    </fileset.resources>
+    <fileset.package />
+    <build-deliverables>
+      <file location="${PROJECT_ROOT}/runTimeOpt/for_testing" name="runTimeOpt.ctf" optional="false">/scratch2/jra3/REV30_GA_Hockenheim/compilingGeneralLapSim/runTimeOpt/for_testing/runTimeOpt.ctf</file>
+      <file location="${PROJECT_ROOT}/runTimeOpt/for_testing" name="splash.png" optional="false">/scratch2/jra3/REV30_GA_Hockenheim/compilingGeneralLapSim/runTimeOpt/for_testing/splash.png</file>
+      <file location="${PROJECT_ROOT}/runTimeOpt/for_testing" name="run_runTimeOpt.sh" optional="false">/scratch2/jra3/REV30_GA_Hockenheim/compilingGeneralLapSim/runTimeOpt/for_testing/run_runTimeOpt.sh</file>
+      <file location="${PROJECT_ROOT}/runTimeOpt/for_testing" name="readme.txt" optional="true">/scratch2/jra3/REV30_GA_Hockenheim/compilingGeneralLapSim/runTimeOpt/for_testing/readme.txt</file>
+      <file location="${PROJECT_ROOT}/runTimeOpt/for_testing" name="runTimeOpt" optional="false">/scratch2/jra3/REV30_GA_Hockenheim/compilingGeneralLapSim/runTimeOpt/for_testing/runTimeOpt</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>/software/matlab/R2014a</root>
+      <toolboxes>
+        <toolbox name="fixedpoint" />
+        <toolbox name="embeddedcoder" />
+        <toolbox name="matlabcoder" />
+      </toolboxes>
+      <toolbox>
+        <fixedpoint>
+          <enabled>true</enabled>
+        </fixedpoint>
+      </toolbox>
+      <toolbox>
+        <embeddedcoder>
+          <enabled>true</enabled>
+        </embeddedcoder>
+      </toolbox>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>true</unix>
+      <mac>false</mac>
+      <windows>false</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>true</linux>
+      <solaris>false</solaris>
+      <osver>2.6.32-504.16.2.el6.x86_64</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>glnxa64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
