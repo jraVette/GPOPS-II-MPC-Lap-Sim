@@ -1,0 +1,8 @@
+Iterate             = 1
+Sim Started         = 2017-11-12, 10:20:20
+Last Check In       = 2017-11-13, 00:39:27
+Elapsed Time        = 14:19:07
+Current Distance    = 669.8
+Simulation Finished = 1
+Lap Time            = 13.7072
+Convergence         = NaN
