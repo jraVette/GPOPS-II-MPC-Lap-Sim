@@ -264,8 +264,8 @@ while ~finishFlag
     end
             
     
-    segPathX0       = daq.rawData.xPath.meas(end);
-    segPathY0       = daq.rawData.yPath.meas(end);
+    segPathX0       = daq.rawData.xTrack.meas(end);
+    segPathY0       = daq.rawData.yTrack.meas(end);
     segPathPsi0     = daq.rawData.pathHeading.meas(end);
     
     %Save them in the daq file
