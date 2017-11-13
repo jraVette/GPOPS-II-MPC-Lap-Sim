@@ -90,7 +90,8 @@ if loadInitialGuess
     
  
     [~,rawDataStruct]       = getChannelDataFromDaqFile(guessDaq,[],...         %Get the right channel data 200m before the end of the lap till the end
-                                {distance(end)+initialDistance 'end'},'distance');                     
+                                 'atIndepVariableTime',{distance(end)+initialDistance 'end'},...
+                                 'indepVariableChannel','distance');                     
     timeGuess               = [distance-distance(1)+initialDistance];   
     stateGuess              = [ePsi  ey       vx       vy       r     time-time(1) omega_L1 omega_R1 omega_L2 omega_R2 delta torqueDemand];
     x0                      = stateGuess(1,:);
