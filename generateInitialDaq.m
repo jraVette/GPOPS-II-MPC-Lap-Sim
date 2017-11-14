@@ -14,7 +14,7 @@ defaults = {'loadInitialGuess',true         %I needed to skip this for open loop
 setDefaultsForVarargin(defaults,varargin)
 
 %% Load Vehicle 
-car = 'F1'; %Choose 'F1' or 'C7R'
+car = 'C7R'; %Choose 'F1' or 'C7R'
 vehicleDirectory = fullfile(jatecPath,'Resources/In house code/Vehicle Parameters/');
 switch car
     case 'F1'
@@ -29,9 +29,9 @@ vehicle.parameter.enginePower.meas = 500*1000*myConstants.w2hp;
 vehicle.parameter.differentialFrictionCoeff.meas = 1e2;
 
 %track - must be first, needed for switching
-%trackFilename = 'PathInfoChicane2LoopsAndFrontStraight.mat';
+trackFilename = 'PathInfoChicane2LoopsAndFrontStraight.mat';
 % trackFilename = 'PathInfoChicaneStraightsBeforeAndAfter.mat';
-trackFilename = 'HockenheimLoopedBeforeAndAfter.mat';
+% trackFilename = 'HockenheimLoopedBeforeAndAfter.mat';
 %trackFilename = 'Nurburgring.mat';
 %trackFilename = 'PathInfoChicane.mat'
 
