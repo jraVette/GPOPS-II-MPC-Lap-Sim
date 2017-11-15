@@ -5,6 +5,8 @@ function daq = generateInitialDaq(varargin)
 %Creation: 28 Dec 2015 - Jeff Anderson
 %Updated:  06 Jan 2017 - Jeff Anderson updated hockenheim initial
 %    conditions in hopes of making a cyclic lap possible.
+%Updated:  13 Nov 2017 - Jeff Anderson - updated inital guess using matlab
+%    ode solver running gpops cont fun.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -29,9 +31,9 @@ vehicle.parameter.enginePower.meas = 500*1000*myConstants.w2hp;
 vehicle.parameter.differentialFrictionCoeff.meas = 1e2;
 
 %track - must be first, needed for switching
-%trackFilename = 'PathInfoChicane2LoopsAndFrontStraight.mat';
+trackFilename = 'PathInfoChicane2LoopsAndFrontStraight.mat';
 % trackFilename = 'PathInfoChicaneStraightsBeforeAndAfter.mat';
-trackFilename = 'HockenheimLoopedBeforeAndAfter.mat';
+% trackFilename = 'HockenheimLoopedBeforeAndAfter.mat';
 %trackFilename = 'Nurburgring.mat';
 %trackFilename = 'PathInfoChicane.mat'
 
@@ -82,27 +84,61 @@ clear s c c0 lb ub lb0 ub0%don't need them
 %% Initial Guess
 if loadInitialGuess
     optimizationGuessType = 'lastMpcHorizon'; %Use either 'lastMpcHorizon' or 'global'.  Use global to load an exisiting solution or lastMpc to use solver
-    delta = []; %I'm overwriting this builtin matlab function
-    distance = []; %I want to index this and it will throw and error otherwise
-    guessDaq = load(guessFilename);                                                    %Load a daq file from open loop sims
-    guessDaq = guessDaq.daq; %move one level up
-    guessDaq = getChannelDataFromDaqFile(guessDaq,'distance');
     
- 
-    [~,rawDataStruct]       = getChannelDataFromDaqFile(guessDaq,[],...         %Get the right channel data 200m before the end of the lap till the end
-                                 'atIndepVariableTime',{distance(end)+initialDistance 'end'},...
-                                 'indepVariableChannel','distance');                     
-    timeGuess               = [distance-distance(1)+initialDistance];   
-    stateGuess              = [ePsi  ey       vx       vy       r     time-time(1) omega_L1 omega_R1 omega_L2 omega_R2 delta torqueDemand];
+%     guessDaq = load(guessFilename);                                                    %Load a daq file from open loop sims
+%     guessDaq = guessDaq.daq; %move one level up
+%     
+%     delta = []; %I'm overwriting this builtin matlab function
+%     distance = []; %I want to index this and it will throw and error otherwise
+%     
+%     guessDaq = getChannelDataFromDaqFile(guessDaq,'distance');
+%     
+%  
+%     [~,rawDataStruct]       = getChannelDataFromDaqFile(guessDaq,[],...         %Get the right channel data 200m before the end of the lap till the end
+%                                  'atIndepVariableTime',{distance(end)+initialDistance 'end'},...
+%                                  'indepVariableChannel','distance');      
+%     
+%     
+%     timeGuess = distance;
+%     stateGuess = [ePsi ey vx vy r time omega_L1 omega_R1 omega_L2 omega_R2 delta torqueDemand];
+%     controlGuess = [u1 u2];
+    
+    s = (initialDistance:interpolationAccuracy:initialDistance+horizon)';
+
+%     s = (0:0.25:150)';
+    u1 = zeros(size(s));
+    u2 = zeros(size(s));
+    u2(s < initialDistance + 5) = 1e4;
+%     u2(s > initialDistance+horizon-100 & initialDistance+horizon-105) = -0.5e4;
+%     u2 = 4000*ones(size(s));
+    u = [u1 u2];
+    
+    vx0 = 20;
+    omega_front0 = -vx0./vehicle.tire_front.reff.meas;
+    omega_rear0 = -vx0./vehicle.tire_rear.reff.meas;
+    x0 = [0 0 vx0 0 0 0 omega_front0 omega_front0 omega_rear0 omega_rear0 0 0 ];
+    auxdata.vehicle = vehicle;
+    auxdata.track = track;
+    guessDaq = runDoubleTrackMatlabOde(s,x0,u,auxdata);
+    guessDaq.header.track = track;
+    guessDaq = calculateAlgebraicStates(guessDaq);
+timeGuess = s;
+    stateGuess = writeDaqChannelsToMatrix(guessDaq,'selectedChannels', {'ePsi';'ey';'vx';'vy';'r';'time';'omega_L1';'omega_R1';'omega_L2';'omega_R2';'delta';'torqueDemand'});
+    controlGuess = writeDaqChannelsToMatrix(guessDaq,'selectedChannels',{'u1'; 'u2'});
+    
+
+                   
+%     timeGuess               = [distance-distance(1)+initialDistance];   
+%     stateGuess              = [ePsi  ey       vx       vy       r     time-time(1) omega_L1 omega_R1 omega_L2 omega_R2 delta torqueDemand];
     x0                      = stateGuess(1,:);
-    controlGuess            = [u1 u2];
+%     controlGuess            = [u1 u2];
     trackRawData            = trackParameterInterpolation(track,initialDistance); %Get track data
-    pathX0                  = xPath(1);                                 %We want the track to start at X0 = s0
-    pathY0                  = yPath(1);                                               %We want the track to start at Y0 = 0
-    pathPsi0                = pathHeading(1);                        %However, we want the trak oriented correclty
-    segPathX0               = xPath(1);                                          %This is updated per segment, start now
-    segPathY0               = yPath(1);                                          %This is updated per segment, start now
-    segPathPsi0             = pathHeading(1);                                        %This is updated per segment, start now  
+    pathX0                  = trackRawData.x.meas;                                 %We want the track to start at X0 = s0
+    pathY0                  = trackRawData.y.meas;                                               %We want the track to start at Y0 = 0
+    pathPsi0                = trackRawData.yaw.meas;                        %However, we want the trak oriented correclty
+    segPathX0               = pathX0;                                          %This is updated per segment, start now
+    segPathY0               = pathY0;                                          %This is updated per segment, start now
+    segPathPsi0             = pathPsi0;                                        %This is updated per segment, start now  
     
 end
 
