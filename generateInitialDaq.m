@@ -14,7 +14,7 @@ defaults = {'loadInitialGuess',true         %I needed to skip this for open loop
 setDefaultsForVarargin(defaults,varargin)
 
 %% Load Vehicle 
-car = 'F1'; %Choose 'F1' or 'C7R'
+car = 'C7R'; %Choose 'F1' or 'C7R'
 vehicleDirectory = fullfile(jatecPath,'Resources/In house code/Vehicle Parameters/');
 switch car
     case 'F1'
@@ -25,15 +25,17 @@ switch car
         fullVehicleFile = fullfile(vehicleDirectory,'Corvette',carFilename);
 end
 load(fullVehicleFile);
-vehicle.parameter.enginePower.meas = 500*1000*myConstants.w2hp;
-vehicle.parameter.differentialFrictionCoeff.meas = 1e2;
+% vehicle.parameter.enginePower.meas = 500*1000*myConstants.w2hp;
+% vehicle.parameter.differentialFrictionCoeff.meas = 1e2;
+
 
 %track - must be first, needed for switching
 %trackFilename = 'PathInfoChicane2LoopsAndFrontStraight.mat';
 % trackFilename = 'PathInfoChicaneStraightsBeforeAndAfter.mat';
-trackFilename = 'HockenheimLoopedBeforeAndAfter.mat';
+% trackFilename = 'HockenheimLoopedBeforeAndAfter.mat';
 %trackFilename = 'Nurburgring.mat';
 %trackFilename = 'PathInfoChicane.mat'
+trackFilename = 'SebringLoopedOptFitCtrLine.mat';
 
 track = load(trackFilename);
 track = track.track;
@@ -47,16 +49,24 @@ switchingDaq.rawData.switching = createDaqChannelData(c,'','Switching');
 clear s c %don't need them
  
 %MPC Parameters
-horizon                 = 200;                                             %[m] Look ahead %150m for chicane, updated based on course DOE
-controlHorizon          = 10;                                               %[m] MPC update %5m for chicane, updated based on course DOE
+horizon                 = 250;                                             %[m] Look ahead %updated from 150m after course REV01 doe
+controlHorizon          = 25;                                              %[m] MPC update
 interpolationAccuracy   = 0.25;                                            %[m] ds
 horizonDecrement        = 10;                                              %[m] used to shorten horizon incase of convergence error
 minimumHorizon          = 50;                                              %[m] minimum acceptable horizon
 
 %Initalizaiton
-initialDistance         = -200;                                            %[m] s0 %I want to start well before start/finish line                                         %Where the car gets on the track
-timingDistanceStart     = 0;                                               %Where timing starts
-timingDistanceFinish    = track.finishDistance;
+initialDistance         = 4700.21923828125;                                          %[m] s0
+trackRawData            = trackParameterInterpolation(track,initialDistance); %Get track data
+pathX0                  = trackRawData.x.meas;                             %We want the track to start at X0 = s0
+pathY0                  = trackRawData.y.meas;                             %We want the track to start at Y0 = 0
+pathPsi0                = trackRawData.yaw.meas(1);                        %However, we want the trak oriented correclty
+segPathX0               = pathX0;                                          %This is updated per segment, start now
+segPathY0               = pathY0;                                          %This is updated per segment, start now
+segPathPsi0             = pathPsi0;                                        %This is updated per segment, start now
+startDistance           = initialDistance;                                 %Where the car gets on the track
+timingDistanceStart     = initialDistance;                                 %Where timing starts
+timingDistanceFinish    = 5524.63916015625;
 finishDistance          = timingDistanceFinish+10;
 horizonRefinement       = true;
    
@@ -82,28 +92,38 @@ clear s c c0 lb ub lb0 ub0%don't need them
 %% Initial Guess
 if loadInitialGuess
     optimizationGuessType = 'lastMpcHorizon'; %Use either 'lastMpcHorizon' or 'global'.  Use global to load an exisiting solution or lastMpc to use solver
+    
     delta = []; %I'm overwriting this builtin matlab function
     distance = []; %I want to index this and it will throw and error otherwise
     guessDaq = load(guessFilename);                                                    %Load a daq file from open loop sims
     guessDaq = guessDaq.daq; %move one level up
-    guessDaq = getChannelDataFromDaqFile(guessDaq,'distance');
+%     guessDaq = getChannelDataFromDaqFile(guessDaq,'distance');
+
     
- 
-    [~,rawDataStruct]       = getChannelDataFromDaqFile(guessDaq,[],...         %Get the right channel data 200m before the end of the lap till the end
-                                 'atIndepVariableTime',{distance(end)+initialDistance 'end'},...
-                                 'indepVariableChannel','distance');                     
-    timeGuess               = [distance-distance(1)+initialDistance];   
+    
+    vars = {'distance' 'distance'
+            'ePsi'     'ePsi'
+            'ey'        'ey'
+            'vx'       'vx'
+            'vy'       'vy'
+            'r'        'r'
+            'time'     'time'
+            'delta'    'delta'
+            'torqueDemand' 'torqueDemand'
+            'u1'       'u1'
+            'u2'       'u2'};
+    [~,rawDataStruct]       = getChannelDataFromDaqFile(guessDaq,vars,...         
+                                 'atIndepVariableTime',{initialDistance initialDistance+horizon},...
+                                 'indepVariableChannel','distance');
+    vars = {'omega' 'omega'};
+    [~,rawDataStruct]       = getChannelDataFromDaqFile(guessDaq,vars,...         
+                                 'atIndepVariableTime',{initialDistance initialDistance+horizon},...
+                                 'indepVariableChannel','distance',...
+                                 'wheelPositionSuffix','standard');                                                  
+    timeGuess               = [distance];   
     stateGuess              = [ePsi  ey       vx       vy       r     time-time(1) omega_L1 omega_R1 omega_L2 omega_R2 delta torqueDemand];
     x0                      = stateGuess(1,:);
     controlGuess            = [u1 u2];
-    trackRawData            = trackParameterInterpolation(track,initialDistance); %Get track data
-    pathX0                  = xPath(1);                                 %We want the track to start at X0 = s0
-    pathY0                  = yPath(1);                                               %We want the track to start at Y0 = 0
-    pathPsi0                = pathHeading(1);                        %However, we want the trak oriented correclty
-    segPathX0               = xPath(1);                                          %This is updated per segment, start now
-    segPathY0               = yPath(1);                                          %This is updated per segment, start now
-    segPathPsi0             = pathHeading(1);                                        %This is updated per segment, start now  
-    
 end
 
 
@@ -112,7 +132,7 @@ if loadBounds
     ePsiMax     = 25*myConstants.deg2rad;                                  %Pevious solutions said this was bounded by [-25, 25]
     eyMax       = 5;                                                       %Road width constraint
     vxLb        = 5;                                                       %Original bound
-    vxUb        = 90;%69.9240505593388;                                        %Original Bound
+    vxUb        = 70;%69.9240505593388;                                        %Original Bound
     vyMax       = 10;                                                      %Orignal bounds
     rMax        = 55*myConstants.deg2rad;                                  %Orignal bound 45 deg/s
     tLb         = 0;
