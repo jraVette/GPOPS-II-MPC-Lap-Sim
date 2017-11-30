@@ -20,6 +20,7 @@ input.phase.state = output.result.(solutionField).phase.state;
 input.phase.control = output.result.(solutionField).phase.control;
 
 input.auxdata.vehicle = daq.vehicle;
+input.auxdata.track = daq.header.track;
 
 phaseout = fourwheelContinuous(input);
 
