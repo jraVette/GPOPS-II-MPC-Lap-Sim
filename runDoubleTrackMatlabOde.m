@@ -3,7 +3,7 @@ clc
 
 %Inport parameters
 daq = generateInitialDaq('loadInitialGuess',false,'loadBounds',false);
-auxdata.vehicle = daq.header.vehicle;
+auxdata.vehicle = daq.vehicle;
 auxdata.track   = daq.header.track;
 clear daq
 
@@ -11,7 +11,7 @@ clear daq
 s = rowVector(0:0.25:150);
 u1 = rowVector(0*myConstants.deg2rad*ones(size(s)));
 % u1(end-20:end) = 0*myConstants.deg2rad*ones(size(u1(end-20:end)));
-u2 = 1000*ones(size(s)) %(2700*ones(size(s))+10*s)/4000;
+u2 = 1000*ones(size(s))/5000 %(2700*ones(size(s))+10*s)/4000;
 u= [u1 u2];
 
 %% Set up plots

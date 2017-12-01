@@ -126,8 +126,8 @@ if loadBounds
     
     bounds.lbX              = [-ePsiMax -eyMax 	 vxLb    -vyMax      -rMax   tLb     omegaLb omegaLb omegaLb omegaLb -deltaMax -TMax]; 
     bounds.ubX              = [ ePsiMax  eyMax   vxUb     vyMax       rMax   tUb     omegaUb omegaUb omegaUb omegaUb  deltaMax  TMax];
-    bounds.ubU              = [ deltaRate  TRate];
-    bounds.lbU              = [-deltaRate -TRate];
+    bounds.ubU              = [ deltaRate  1];
+    bounds.lbU              = [-deltaRate -1];
     bounds.pathLower        = -1e6;
     bounds.pathUpper        = 0;
 %    bounds.integralLower    = 0;
