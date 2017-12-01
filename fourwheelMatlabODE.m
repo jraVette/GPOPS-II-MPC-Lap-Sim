@@ -19,7 +19,7 @@ if ~suppressOutput
     if isempty(count); count = 1; end
     
     %What vars do you want to print
-    vars = {'s', 'x(1)'};
+    vars = {'s', 'x(3)'};
     headerText = [];
     dataText = [];
     for i = 1:length(vars)
@@ -31,7 +31,7 @@ if ~suppressOutput
         fprintf('%s\n',headerText)
     end
     count = count+1;
-    if count == 21
+    if count == 101
         count = 1;
     end
     fprintf('%s\n',dataText)
