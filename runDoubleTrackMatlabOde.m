@@ -17,7 +17,6 @@ if nargin == 0
 end
 
 %% Run simulation
-u = rowVector(u);
 sSpace = s;
 sSpan = [s(1) s(end)]; %#ok s will be an array
 
