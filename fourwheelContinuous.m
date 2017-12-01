@@ -66,7 +66,7 @@ T           = input.phase.state(:,12);
 
 %Control
 u1  = input.phase.control(:,1);
-u2   = input.phase.control(:,2);
+u2   = input.phase.control(:,2)*5000;
 
 %% Power Train
 %Power Train (based on the work in Tremlett)
