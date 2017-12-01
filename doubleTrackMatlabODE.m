@@ -1,56 +1,38 @@
 function dx = doubleTrackMatlabODE(s,x,u,sSim,auxdata)
 
+vehicle = auxdata.vehicle;
 
-% Input prameters: F1 Car!
-% Input prameters
-m           = auxdata.vehicle.m;      %Total vehicle mass                             [kg] 
-Izz         = auxdata.vehicle.Izz;      %Yaw Inertia                                    [kg*m^2]
-a           = auxdata.vehicle.a ;      %Length of front axle to CG                     [m]
-b           = auxdata.vehicle.b;      %Length of rear axle to CG                      [m]
-h           = auxdata.vehicle.h;      %Height of CG                                   [m]
-D           = auxdata.vehicle.D;      %Roll stiffness distribution of the front axle                           [m]
-reff_f      = auxdata.vehicle.reff_f;     %Effective rolling radius front axle            [m]  
-reff_r      = auxdata.vehicle.reff_r;     %Effective rolling radius front axle            [m]  
-kd          = auxdata.vehicle.kd;    %Differential friction coeff                    [N*m*s/rad]
-CD          = auxdata.vehicle.CD;      %Coefficient of drag
-CL          = auxdata.vehicle.CL;      %Coefficient of lift
-frontalArea = auxdata.vehicle.frontalArea;      %Frontal area                                   [m^2]
-rho         = auxdata.vehicle.rho;      %Air Density                                    [kg/m^3]
-a_a         = auxdata.vehicle.a_a;      %Dist to CP to front axle                       [m]
-g           = auxdata.vehicle.g ;     %Accel due to gravity                           [m/s^2]
-wf          = auxdata.vehicle.wf;
-wr          = auxdata.vehicle.wr;
-Jr_f        = auxdata.vehicle.Jr_f;%Lot's parameters %(1.410+	1.594); %values from yaris
-Jr_r        = auxdata.vehicle.Jr_r;%%Lot's parameters %(1.410+	1.594);%values from yaris
-torqueBrakingRear   = auxdata.vehicle.torqueBrakingRear;
-torqueDrivingRear   = auxdata.vehicle.torqueDrivingRear;
-maxEnginePower      = auxdata.vehicle.maxEnginePower; 
+%Tire Parameters
+coeffFront          = vehicle.tire_front.coeff.meas;     
+coeffRear           = vehicle.tire_rear.coeff.meas; 
 
-
-
-coeff    = auxdata.vehicle.tire.coeff; 
-%    
-% %ZR1
-% m           = 1595;      %Total vehicle mass                             [kg] 
-% Izz         = 663;      %Yaw Inertia    (from Z06)                                [kg*m^2]
-% L           = 4.47548;      %Wheelbase                                      [m]
-% a           = 1.312;      %Length of front axle to CG                     [m]
-% b           = L-a;      %Length of rear axle to CG                      [m]
-% h           = 0.42418;      %Height of CG                                   [m]
-% D           = 0.5;      %roll stiffness distribution of the front axle
-% tf          = 0.73*2;   %Front track width                              [m]
-% tr          = 0.73*2;   %rear track width                               [m]
-% reff_f      = 0.33;     %Effective rolling radius front axle            [m]   **** NOT USED NOW
-% reff_r      = 0.33;     %Effective rolling radius front axle            [m]   **** NOT USED NOW
-% kd          = 10.47;    %Differential friction coeff                    [N*m*s/rad] *** Not used now
-% CD          = 0.9;      %Coefficient of drag
-% CL          = 3.0;      %Coefficient of lift
-% frontalArea = 1.5;      %Frontal area                                   [m^2]
-% rho         = 1.2;      %Air Density                                    [kg/m^3]
-% a_a         = 1.9;      %Dist to CP to front axle                       [m]
-% b_a         = L-a_a;    %Dist of rear axle to CP                        [m]
-% g           = 9.81;     %Accel due to gravity                           [m/s^2]
-
+%Vehicle prameters
+g = 9.81;
+m                   = vehicle.parameter.mass.meas;                         %Total vehicle mass                             [kg] 
+Izz                 = vehicle.parameter.yawInertia.meas;                   %Yaw Inertia                                    [kg*m^2]
+a                   = vehicle.parameter.a.meas ;                           %Length of front axle to CG                     [m]
+b                   = vehicle.parameter.b.meas;                            %Length of rear axle to CG                      [m]
+h                   = vehicle.parameter.hcg.meas;                          %Height of CG                                   [m]
+D                   = vehicle.parameter.rollStiffnessDistribution.meas;    %Roll stiffness distribution of the front axle                           [m]
+reff_f              = vehicle.tire_front.reff.meas;                        %Effective rolling radius front axle            [m]  
+reff_r              = vehicle.tire_rear.reff.meas;                         %Effective rolling radius front axle            [m]  
+kd                  = vehicle.parameter.differentialFrictionCoeff.meas;    %Differential friction coeff                    [N*m*s/rad]
+CD                  = vehicle.parameter.coeffDrag.meas;                    %Coefficient of drag
+CL                  = vehicle.parameter.coeffLift.meas;                    %Coefficient of lift
+frontalArea         = vehicle.parameter.frontalArea.meas;                  %Frontal area                                   [m^2]
+rho                 = vehicle.parameter.airDensity.meas;                   %Air Density                                    [kg/m^3]
+a_a                 = vehicle.parameter.a_a.meas;                          %Dist to CP to front axle                       [m]                                         %Accel due to gravity                           [m/s^2]
+wf                  = vehicle.parameter.trackWidth_front.meas/2;           %1/2 of front track                             [m]
+wr                  = vehicle.parameter.trackWidth_rear.meas/2;            %1/2 of rear track                              [m]
+Jtire               = vehicle.tire_front.tireInertia.meas;     
+Jwheel              = vehicle.tire_front.wheelInertia.meas;
+Jr_f                = Jtire + Jwheel;                                      %Wheel inertia front wheel+tire                 [kg*m^2]
+Jtire               = vehicle.tire_rear.tireInertia.meas;     
+Jwheel              = vehicle.tire_rear.wheelInertia.meas;
+Jr_r                = Jtire + Jwheel;                                      %Wheel inertia rear wheel+tire                  [kg*m^2]
+torqueBrakingRear   = vehicle.parameter.torqueDistBrakingRear.meas;        %Torque distrubution going to rear under braking [-] \in [0,1]
+torqueDrivingRear   = vehicle.parameter.torqueDistDrivingRear.meas;        %Torque distrubution going to rear under driving [-] \in [0,1]
+maxEnginePower      = vehicle.parameter.enginePower.meas*745.7010; %Max engine power                                [W]
 
 
 %% Set up states
@@ -75,7 +57,7 @@ T           = x(12);
 u1 = u(:,1);
 u2 = u(:,2); 
 u1  = interp1(sSim,u1,s);                                                         %Assume front wheel steer only
-u2   = interp1(sSim,u2,s);
+u2   = interp1(sSim,u2,s)*5000;
 
 
 
@@ -130,10 +112,10 @@ alpha_R2    = atan((vy - r*b)./(vx - r*wr));
 
 %Tire forces
     %Tire forces
-    [fx_L1, fy_L1] = simplifiedPacejka(-Fz_L1,-alpha_L1,kappa_L1,coeff); %Fix because Pacejka is in ISO-W and vehicle is in SAE
-    [fx_R1, fy_R1] = simplifiedPacejka(-Fz_R1,-alpha_R1,kappa_R1,coeff);
-    [fx_L2, fy_L2] = simplifiedPacejka(-Fz_L2,-alpha_L2,kappa_L2,coeff);
-    [fx_R2, fy_R2] = simplifiedPacejka(-Fz_R2,-alpha_R2,kappa_R2,coeff);
+    [fx_L1, fy_L1] = simplifiedPacejka(-Fz_L1,-alpha_L1,kappa_L1,coeffFront); %Fix because Pacejka is in ISO-W and vehicle is in SAE
+    [fx_R1, fy_R1] = simplifiedPacejka(-Fz_R1,-alpha_R1,kappa_R1,coeffFront);
+    [fx_L2, fy_L2] = simplifiedPacejka(-Fz_L2,-alpha_L2,kappa_L2,coeffRear);
+    [fx_R2, fy_R2] = simplifiedPacejka(-Fz_R2,-alpha_R2,kappa_R2,coeffRear);
 
     %Plot tire
     hFig = findobj('Name','Tire Fx');
