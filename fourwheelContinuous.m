@@ -157,8 +157,41 @@ phaseout.path = (T).*wheelSpeed - (maxEnginePower);
                  %Torque [N*m]*[rad/s]       [W]    
                  %Power [N*m/s = W]
 
+                 
+phaseout.algebraicStates.wheelSpeed.meas = wheelSpeed;
+phaseout.algebraicStates.engineEfficiency.meas = (T).*wheelSpeed/maxEnginePower;
+phaseout.algebraicStates.T_drive_L1.meas = T_drive_L1;
+phaseout.algebraicStates.T_drive_R1.meas = T_drive_R1;
+phaseout.algebraicStates.T_drive_L2.meas = T_drive_L2;
+phaseout.algebraicStates.T_drive_R2.meas = T_drive_R2;
+phaseout.algebraicStates.Fax.meas = Fax;
+phaseout.algebraicStates.Faz.meas = Faz;
+
+phaseout.algebraicStates.fz_L1.meas = Fz_L1;
+phaseout.algebraicStates.fz_R1.meas = Fz_R1;
+phaseout.algebraicStates.fz_L2.meas = Fz_L2;
+phaseout.algebraicStates.fz_R2.meas = Fz_R2;
+
+phaseout.algebraicStates.kappa_L1.meas = kappa_L1;
+phaseout.algebraicStates.kappa_R1.meas = kappa_R1;
+phaseout.algebraicStates.kappa_L2.meas = kappa_L2;
+phaseout.algebraicStates.kappa_R2.meas = kappa_R2;
+
+phaseout.algebraicStates.alpha_L1.meas = alpha_L1;
+phaseout.algebraicStates.alpha_R1.meas = alpha_R1;
+phaseout.algebraicStates.alpha_L2.meas = alpha_L2;
+phaseout.algebraicStates.alpha_R2.meas = alpha_R2;
+
+phaseout.algebraicStates.fx_L1.meas = fx_L1;
+phaseout.algebraicStates.fx_R1.meas = fx_R1;
+phaseout.algebraicStates.fx_L2.meas = fx_L2;
+phaseout.algebraicStates.fx_R2.meas = fx_R2;
 
 
+phaseout.algebraicStates.fy_L1.meas = fy_L1;
+phaseout.algebraicStates.fy_R1.meas = fy_R1;
+phaseout.algebraicStates.fy_L2.meas = fy_L2;
+phaseout.algebraicStates.fy_R2.meas = fy_R2;
 
 
 end

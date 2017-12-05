@@ -29,9 +29,9 @@ vehicle.parameter.enginePower.meas = 500*1000*myConstants.w2hp;
 vehicle.parameter.differentialFrictionCoeff.meas = 1e2;
 
 %track - must be first, needed for switching
-%trackFilename = 'PathInfoChicane2LoopsAndFrontStraight.mat';
-% trackFilename = 'PathInfoChicaneStraightsBeforeAndAfter.mat';
-trackFilename = 'HockenheimLoopedBeforeAndAfter.mat';
+% trackFilename = 'PathInfoChicane2LoopsAndFrontStraight.mat';
+trackFilename = 'PathInfoChicaneStraightsBeforeAndAfter.mat';
+% trackFilename = 'HockenheimLoopedBeforeAndAfter.mat';
 %trackFilename = 'Nurburgring.mat';
 %trackFilename = 'PathInfoChicane.mat'
 
@@ -79,30 +79,65 @@ switchingDaq.rawData.lb = createDaqChannelData(lb,'','Switching Lower Bounds');
 switchingDaq.rawData.ub = createDaqChannelData(ub,'','Switching Upper Bounds');
 clear s c c0 lb ub lb0 ub0%don't need them
 
+
+%Names
+gpopsOptions.indepVarName = 'distance'; %Must be a char (only one var)
+gpopsOptions.stateNames   = {'ePsi';'ey';'vx';'vy';'r';'time';'omega_L1';'omega_R1';'omega_L2';'omega_R2';'delta';'torqueDemand'};
+gpopsOptions.controlNames = {'u1';'u2'};
+gpopsOptions.units        = {'rad';'m';'m/s';'m/s';'rad/s';'s';'rad/s';'rad/s';'rad/s';'rad/s';'rad';'N*m';'-';'-';'m'};
+gpopsOptions.names        = {'Heading Deviation','Lateral Deviation','Longitudinal Speed','Lateral Speed','Yaw Rate','time',...
+                'Wheel Speed Left Front','Wheel Speed Right Front','Wheel Speed Left Rear','Wheel Speed Right Rear','Steering Wheel Angle','Torque Demand','Distance','Steering Rate','Torque Demand Rate'};
+
 %% Initial Guess
 if loadInitialGuess
     optimizationGuessType = 'lastMpcHorizon'; %Use either 'lastMpcHorizon' or 'global'.  Use global to load an exisiting solution or lastMpc to use solver
-    delta = []; %I'm overwriting this builtin matlab function
-    distance = []; %I want to index this and it will throw and error otherwise
-    guessDaq = load(guessFilename);                                                    %Load a daq file from open loop sims
-    guessDaq = guessDaq.daq; %move one level up
-    guessDaq = getChannelDataFromDaqFile(guessDaq,'distance');
     
- 
-    [~,rawDataStruct]       = getChannelDataFromDaqFile(guessDaq,[],...         %Get the right channel data 200m before the end of the lap till the end
-                                 'atIndepVariableTime',{distance(end)+initialDistance 'end'},...
-                                 'indepVariableChannel','distance');                     
-    timeGuess               = [distance-distance(1)+initialDistance];   
-    stateGuess              = [ePsi  ey       vx       vy       r     time-time(1) omega_L1 omega_R1 omega_L2 omega_R2 delta torqueDemand];
+    %Open loop initial guess
+    sSpace = (initialDistance:interpolationAccuracy:initialDistance+horizon)';
+    uGuess = [0*ones(length(sSpace),1) 350*ones(length(sSpace),1)];
+    vx0 = 20;
+    omega_0_front = -vx0*(1)./vehicle.tire_front.reff.meas;
+    omega_0_rear = -vx0*(1+0.05)./vehicle.tire_rear.reff.meas;
+    T0 = 2800;
+    x0 = [0 0 vx0 0 0 0 omega_0_front omega_0_front omega_0_rear omega_0_rear 0 T0];
+    auxdata.vehicle = vehicle;
+    auxdata.track = track;
+    auxdata.indepVarName    = gpopsOptions.indepVarName;
+    auxdata.stateNames      = gpopsOptions.stateNames;
+    auxdata.controlNames    = gpopsOptions.controlNames;
+    auxdata.units           = gpopsOptions.units;
+    auxdata.names           = gpopsOptions.names;
+    
+    guessDaq = runDoubleTrackMatlabOde(sSpace,x0,uGuess,auxdata);
+    guessDaq.header.track = track;
+    guessDaq = calculateAlgebraicStates(guessDaq);
+    
+    
+    timeGuess = writeDaqChannelsToMatrix(guessDaq,'selectedChannels',gpopsOptions.indepVarName);
+    stateGuess = writeDaqChannelsToMatrix(guessDaq,'selectedChannels',gpopsOptions.stateNames);
+    controlGuess = writeDaqChannelsToMatrix(guessDaq,'selectedChannels',gpopsOptions.controlNames);
+    
+%     delta = []; %I'm overwriting this builtin matlab function
+%     distance = []; %I want to index this and it will throw and error otherwise
+%     guessDaq = load(guessFilename);                                                    %Load a daq file from open loop sims
+%     guessDaq = guessDaq.daq; %move one level up
+%     guessDaq = getChannelDataFromDaqFile(guessDaq,'distance');
+%     
+%  
+%     [~,rawDataStruct]       = getChannelDataFromDaqFile(guessDaq,[],...         %Get the right channel data 200m before the end of the lap till the end
+%                                  'atIndepVariableTime',{distance(end)+initialDistance 'end'},...
+%                                  'indepVariableChannel','distance');                     
+%     timeGuess               = [distance-distance(1)+initialDistance];   
+%     stateGuess              = [ePsi  ey       vx       vy       r     time-time(1) omega_L1 omega_R1 omega_L2 omega_R2 delta torqueDemand];
     x0                      = stateGuess(1,:);
-    controlGuess            = [u1 u2];
+%     controlGuess            = [u1 u2];
     trackRawData            = trackParameterInterpolation(track,initialDistance); %Get track data
-    pathX0                  = xPath(1);                                 %We want the track to start at X0 = s0
-    pathY0                  = yPath(1);                                               %We want the track to start at Y0 = 0
-    pathPsi0                = pathHeading(1);                        %However, we want the trak oriented correclty
-    segPathX0               = xPath(1);                                          %This is updated per segment, start now
-    segPathY0               = yPath(1);                                          %This is updated per segment, start now
-    segPathPsi0             = pathHeading(1);                                        %This is updated per segment, start now  
+    pathX0                  = trackRawData.x.meas(1);                                 %We want the track to start at X0 = s0
+    pathY0                  = trackRawData.y.meas(1);                                               %We want the track to start at Y0 = 0
+    pathPsi0                = trackRawData.yaw.meas(1);                         %However, we want the trak oriented correclty
+    segPathX0               = pathX0;                                          %This is updated per segment, start now
+    segPathY0               = pathY0;                                          %This is updated per segment, start now
+    segPathPsi0             = pathPsi0;                                        %This is updated per segment, start now  
     
 end
 
